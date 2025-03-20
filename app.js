@@ -34,7 +34,7 @@ $('#alertDraw').hide();
 let currentPlayer = '';
 
 const winningOutcomes = [
-    [box0, box1, box2], [box3. box4, box5], [box6, box7, box8],
+    [box0, box1, box2], [box3, box4, box5], [box6, box7, box8],
     [box0, box3, box6], [box1, box4, box7], [box2, box5, box8],
     [box0, box4, box8], [box2, box4, box6]
 ];
@@ -46,42 +46,28 @@ const endGame = () => {
     $('#p2').removeClass("bg-light border border-info");
 };
 
-const checkWinner = (currentPlayer, a, b, c) => {
-
-    if(a.text() === currentPlayer && b.text() === currentPlayer && c.text() === currentPlayer) {
+const checkWinner = (currentPlayer, a, b, c) => { //was not showing name of player that won.  found solution on reddit.
+    if (a.text() === currentPlayer && b.text() === currentPlayer && c.text() === currentPlayer) {
         winner = true;
-        console.log('Found winner, its $(currentPlayer)!');
+        console.log(`Found winner, it's ${currentPlayer}!`);
 
-        a.removeClass('text-info bg-dark');
-        b.removeClass('text-info bg-dark');
-        c.removeClass('text-info bg-dark');
+        // Highlight winning cells
+        a.removeClass('text-info bg-dark').addClass('text-dark bg-info');
+        b.removeClass('text-info bg-dark').addClass('text-dark bg-info');
+        c.removeClass('text-info bg-dark').addClass('text-dark bg-info');
 
-        a.addClass('text-dark bg-info');
-        b.addClass('text-dark bg-info');
-        c.addClass('text-dark bg-info');
+        // Determine which player won
+        let winningPlayer = currentPlayer === "X" ? "Player 1" : "Player 2";
 
-        if(currentPlayer === 'x') {
-            currentPlayer = "Player 1";
-        } else {
-            currentPlayer = "Player 2";
-        }
-
-        $('alertWinner').text('Game Over... $(currentPlayer) Wins!')
-        $('#alertWinner').show();
+        // Show alert with the correct winner
+        $('#alertWinner').text(`Game Over... ${winningPlayer} Wins!`).show();
 
         endGame();
     }
 };
 
 const checkOutcomes = () => {
-    checkWinner(currentPlayer, ...winningOutcomes[0]);
-    checkWinner(currentPlayer, ...winningOutcomes[1]);
-    checkWinner(currentPlayer, ...winningOutcomes[2]);
-    checkWinner(currentPlayer, ...winningOutcomes[3]);
-    checkWinner(currentPlayer, ...winningOutcomes[4]);
-    checkWinner(currentPlayer, ...winningOutcomes[5]);
-    checkWinner(currentPlayer, ...winningOutcomes[6]);
-    checkWinner(currentPlayer, ...winningOutcomes[7]);
+    winningOutcomes.forEach(outcome => checkWinner(currentPlayer, ...outcome)); //the way that the video instructed to do this the function was not checking properly.  found a different solution online.
 
     if(turn === 9 && winner === false) {
         endGame();
@@ -94,7 +80,7 @@ const checkOutcomes = () => {
 const startGame = () => {
 
     console.log('Start Game!');
-    console(turn++);
+    console.log(turn++);
     currentPlayer = player1;
     console.log(currentPlayer);
 
@@ -106,7 +92,7 @@ const startGame = () => {
     $('.box').on('click', function(){
         $('#alertStart').hide();
 
-        $('this').text(currentPlayer);
+        $(this).text(currentPlayer);
 
         if(turn > 4) {
             //check winners
